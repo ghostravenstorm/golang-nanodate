@@ -21,6 +21,61 @@ type Date struct {
    Year    uint16 `json:"year"`
 }
 
+/// Returns a string formatted to match the given structure of a Date.
+/// If a date field contains a 0, the field will be omitted from the string result.
+/// Does not include Hours or Minutes.
+/// Returns either yyyymmdd or yyyy based on the date template.
+func MatchDateStringFormatToTemplate (dateTemplate Date) string {
+
+   /// If the date template contains nothing.
+   if dateTemplate.Year == 0 && dateTemplate.Month == 0 && dateTemplate.Day == 0 {
+      return ""
+   }
+
+   year, month, day, _, _, _, _ := dateTemplate.ToString()
+
+   /// If either month or day are 0, both will be omitted.
+   if dateTemplate.Month == 0 || dateTemplate.Day == 0 {
+      return year
+   } else {
+      return year + month + day
+   }
+
+   /// Return default if nothing else at this point.
+   return ""
+}
+
+/// Takes two dates and returns a list of every date between.
+func MakeDateList (fromDate Date, toDate Date) []Date {
+
+   var listDates []Date
+
+   if DebugLevel == 1 {
+      yr1, mo1, da1, _, _, _, _ := fromDate.ToString()
+      yr2, mo2, da2, _, _, _, _ := toDate.ToString()
+      fmt.Print("\n")
+      log.Printf("Building date list between %s-%s-%s and %s-%s-%s", yr1, mo1, da1, yr2, mo2, da2)
+   }
+
+   var newDate Date = fromDate
+   for {
+      if newDate.IsGreaterThanOrEqualTo(&toDate) {
+         listDates = append(listDates, newDate)
+         break
+      } else {
+         listDates = append(listDates, newDate)
+      }
+
+      newDate.IterateDay()
+   }
+
+   if DebugLevel == 1 {
+      log.Println("List size:", len(listDates), "\n")
+   }
+
+   return listDates
+}
+
 
 /// Outputs all data fields to the console.
 func (this *Date) Print() {
