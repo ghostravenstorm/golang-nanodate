@@ -262,7 +262,7 @@ func (this *Date) IsDateInRange (fromDate *Date, toDate *Date) bool {
 
 func (this *Date) DoesDateMatch (date Date) bool {
 
-   if date == Date{} {
+   if (date == Date{}) {
       return true
    }
 
